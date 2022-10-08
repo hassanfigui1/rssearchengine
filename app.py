@@ -97,7 +97,9 @@ def home(requete):
     # results = results>0.()
     # for i in results:
     #     print(i,"\t\t",type(results))
-    myData=results.argsort()[-49:][::-1]
+    n_zeros = np.count_nonzero(results==0)
+    nbOfResults = (results.size-n_zeros)
+    myData=results.argsort()[nbOfResults+1:][::-1]
     
     # for i in myData:
     #     print(i)
@@ -110,7 +112,7 @@ def home(requete):
     
     return render_template("result.html",myData=pagination_myData,
                            page = page,per_page=per_page,
-                           pagination=pagination,df=df,res=req1,time=time.time()-start_time)
+                           pagination=pagination,df=df,res=req1,time=time.time()-start_time,nbOfResults=nbOfResults)
 
 if __name__ == "__main__":
     app.run(debug=False)

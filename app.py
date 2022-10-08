@@ -3,6 +3,7 @@ from time import time
 import tokenize
 import time
 import nltk
+import numpy as np
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')

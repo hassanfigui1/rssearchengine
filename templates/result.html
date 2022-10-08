@@ -1,0 +1,37 @@
+    {% extends "HtmlCore.html" %}
+    {% block title %}Search Engine{% endblock %}
+
+    {% block content %}
+<div class="">
+<div class="">
+    <form action="/" method="post">
+        <div class="input-group">
+            <input type="search" name="nm" value="{{res}}" class="form-control rounded" placeholder="Search your dream job" aria-label="Search " aria-describedby="search-addon" />
+            <button type="submit" class="btn btn-primary">search</button>
+          </div>
+    </form>
+
+	<h6 class="time"> 
+		<small class="text" >About 40 results ({{time}} seconds )</small>
+	</h6>
+    {% for i in myData %} 
+    <div class="my_card ">
+          <h5 class="card-title"><a href="details/{{df.iloc[i,4]}}/{{df.iloc[i,3]}}/{{df.iloc[i,2]}}/{{df}}/{{df.iloc[i,0]}}/{{res}}/" style="text-decoration: none; font:bold;color:rgb(10, 15, 255)">{{df.iloc[i,4]}}</a></h5>
+            <p class="card-text" style="color:rgb(20, 4, 10)"> 
+                <span style="color:black">Jobs Function: </span>
+                {{df.iloc[i,3][:30]}}...
+                <small class="">industries: {{df.iloc[i,2][:30]}}..</small>
+            </p>
+            <hr>
+        </div>
+    </div>
+    {% endfor %} 
+</div>
+<div class="container">
+    {{pagination.links}}
+</div>
+</div>
+    {% endblock %}
+    
+    
+          

@@ -2,8 +2,8 @@ import csv
 from time import time
 import tokenize
 import time
-nltk.downloader
 nltk.download()
+nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
 from operations import Read_csv, tokenize, RemovePunctuation, drop_duplicates, getRecommendation, remove_StopWrods, to_Lower, word_tokenizer

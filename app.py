@@ -2,7 +2,6 @@ import csv
 from time import time
 import tokenize
 import time
-nltk.download()
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')

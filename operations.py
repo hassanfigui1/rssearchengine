@@ -15,6 +15,7 @@ from nltk.stem.snowball import SnowballStemmer
 stemmer = SnowballStemmer("english")
 
 
+#1 reading dataset 
 def Read_csv(file):
     movies = pd.read_csv(file)
     return movies
@@ -22,17 +23,6 @@ def Read_csv(file):
 def to_Lower(df):
     df = [entry.lower() for entry in df]
     return df 
-def tokenize_words(text):
-    tokens = word_tokenize(text)
-    return tokens
-def steem_word(df):
-    return [porter.stem(w) for w in tokenize_words(df)]
-
-# def replace_punc(df):
-#     df['title'] = df['title'].str.replace('+',' plus')
-#     df['title'] = df['title'].str.replace('#',' sharp')
-#     return df['title']
-
 def RemovePunctuation(df,columns_list):
     punctuationList = []
     for i in string.punctuation:
@@ -46,18 +36,26 @@ def RemovePunctuation(df,columns_list):
 # 2 - Cleaning jobs data set 
 def drop_duplicates(df):
     columns_list = ['title','jobFunction','industry']
+    print("Cleaning Text Features... ")
     df = df.fillna(' ', inplace=False)
-    df['title'] = df['title'].str.replace('+',' plus')
-    df['title'] = df['title'].str.replace('#',' sharp')
-
-    df = df.drop_duplicates(subset=['title'])
+    # df = df.drop_duplicates(subset=['title'])
     # for col in df:
     #     df[col] = df[col].apply(lambda x: str(x).replace('  ', ' '))
     #     df[col] = df[col].apply(lambda x: str(x).replace('-', ' '))
     #     df[col] = df[col].apply(lambda x: str(x).lower())
     #     df[col] = df[col].apply(lambda x: str(x).replace('&', ''))
     #     df[col] = df[col].apply(lambda x: str(x).replace('.', ''))
-        
+    return df
+
+def df():
+    df  = Read_csv("jobs_data.csv")
+    df = drop_duplicates(df)
+    columns_list = ['title','jobFunction','industry']
+    df = RemovePunctuation(df,columns_list)
+    df['clean_title'] = df['title']
+    df['clean_title'] = to_Lower(df['clean_title'])
+    df['clean_title']= remove_StopWrods(df['clean_title'])
+    df['tokenized_title']=df['title'].apply(lambda x: tokenize(x))
     return df
 
 # 2 - remove stop words

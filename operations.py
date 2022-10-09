@@ -31,6 +31,11 @@ def tokenize_words(text):
 def steem_word(df):
     return [porter.stem(w) for w in tokenize_words(df)]
 
+# def replace_punc(df):
+#     df['title'] = df['title'].str.replace('+',' plus')
+#     df['title'] = df['title'].str.replace('#',' sharp')
+#     return df['title']
+
 def RemovePunctuation(df,columns_list):
     punctuationList = []
     for i in string.punctuation:
@@ -38,7 +43,7 @@ def RemovePunctuation(df,columns_list):
             punctuationList.append(i)
     for i in columns_list:
         for j in punctuationList:
-            df[i] = df[i].str.replace(j," ")
+            df[i] = df[i].str.replace(j,' ')
     return df
 #  RemovePunctuation(lower_case(jobs))
 # 2 - Cleaning jobs data set 
@@ -73,4 +78,5 @@ def getRecommendation(requete, df):
     query_vec = vectorizer.transform([requete]) 
     results = cosine_similarity(X,query_vec).reshape((-1,)) 
     return results
+
 

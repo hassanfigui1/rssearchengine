@@ -3,8 +3,6 @@ from time import time
 import tokenize
 import time
 import nltk
-import numpy as np
-nltk.download()
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -21,10 +19,9 @@ from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import SnowballStemmer
 stemmer = SnowballStemmer("english")
 from csv import writer
+
+
 from flask_paginate import Pagination, get_page_args
-
-
-
 app = Flask(__name__)
 
 @app.route("/", methods=["POST", "GET"])

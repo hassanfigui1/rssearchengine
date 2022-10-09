@@ -4,6 +4,7 @@ import tokenize
 import time
 import nltk
 import numpy as np
+nltk.download()
 nltk.download('wordnet')
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -23,8 +24,6 @@ from csv import writer
 
 
 from flask_paginate import Pagination, get_page_args
-app = Flask(__name__)
-
 @app.route("/", methods=["POST", "GET"])
 def index():
     if request.method == "POST":
@@ -71,9 +70,10 @@ def home(requete):
     df  = Read_csv("jobs_data.csv")
     # df = CleanData(df)
     df= drop_duplicates(df)
+    df['title'] = df['title'].str.replace('+',' plus')
+    df['title'] = df['title'].str.replace('#',' sharp')
     df['clean_title'] = to_Lower(df['title'])
-
-    columns_list = ['jobFunction','industry']
+    columns_list = ['title','jobFunction','industry']
     df = RemovePunctuation(df,columns_list)
     df['tokenized_word'] = df['clean_title'].apply(lambda x: tokenize_words(x))
     df['removed_stopwords']= df['tokenized_word'].apply(lambda x: ' '.join([word for word in x if word not in (stop)]))
@@ -90,7 +90,6 @@ def home(requete):
     for word in query:
         res +=' '+stemmer.stem(word)
     start_time = time.time()
-    print("resresresresresresresresresresresres ::::::",res)
     query_vec = vectorizer.transform([res]) 
     results = cosine_similarity(X,query_vec).reshape((-1,)) 
     sizeOfsimilarities = results[ (results >= 0.5) & (results <=1) ].size

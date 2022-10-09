@@ -1,9 +1,11 @@
 import pandas as pd
 import string
 import nltk
+nltk.download()
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
+
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer

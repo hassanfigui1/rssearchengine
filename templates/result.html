@@ -4,20 +4,23 @@
     {% block content %}
             {% if nbOfResults > 1%}
                 <div class="">
-                    <div class="">
+                    <br>
+                    <div class="container">
                         <form action="/" method="post">
                             <div class="input-group">
-                                <input type="search" name="nm" value="{{res}}" class="form-control rounded" placeholder="Search your dream job" aria-label="Search " aria-describedby="search-addon" />
+                                <input type="search"style="height: 56px; width:65%" name="nm" value="{{res}}" class="form-control rounded" placeholder="Search your dream job" aria-label="Search " aria-describedby="search-addon" />
                                 <button type="submit" class="btn btn-primary">search</button>
                             </div>
                         </form>
-                    
+                    <br><br>
                         <h6 class="time"> 
-                            <small class="text" >About {{myData.size}} results ({{time}} seconds )</small>
+                            <h2 class="text" >About {{nbOfResults}} results ({{time}} seconds )</h2>
                         </h6>
+                        <br>
+                        </div>
                         {% for i in myData %} 
                         <div class="my_card ">
-                            <h5 class="card-title"><a href="details/{{df.iloc[i,1]}}/{{df.iloc[i,3]}}/{{df.iloc[i,2]}}/{{df}}/{{df.iloc[i,0]}}/{{res}}/" style="text-decoration: none; font:bold;color:rgb(10, 15, 255)">{{df.iloc[i,4]}}</a></h5>
+                            <h5 class="card-title"><a href="details/{{df.iloc[i,1]}}/{{df.iloc[i,3]}}/{{df.iloc[i,2]}}/{{df}}/{{df.iloc[i,0]}}/{{res}}/" style="text-decoration: none; font:bold;color:rgb(10, 15, 255)">{{df.iloc[i,1]}}</a></h5>
                                 <p class="card-text" style="color:rgb(20, 4, 10)"> 
                                     <span style="color:black">Jobs Function: </span>
                                     {{df.iloc[i,3][:30]}}...
@@ -35,16 +38,31 @@
                     
             {% else %}
                 <div>
-                        <h1 style="background-color: red;">We did not find what you are looking for !!! try again</h1>
-                    <div class="">
+                    <br>
+                    <div class="container">
                         <form action="/" method="post">
                             <div class="input-group">
-                                <input type="search" name="nm" value="{{res}}" class="form-control rounded" placeholder="Search your dream job" aria-label="Search " aria-describedby="search-addon" />
+                                <input type="search" name="nm" value="{{res}}" class="form-control rounded"
+                                 placeholder="Search your dream job" style="height: 56px; width:65%" aria-label="Search " aria-describedby="search-addon" />
                                 <button type="submit" class="btn btn-primary">search</button>
                             </div>
                         </form>
                 </div>
-            {% endif %}
+
+                <div class="d-flex align-items-center justify-content-center vh-100">
+                    <div class="text-center">
+                        <h1 class="display-1 fw-bold">401</h1>
+                        <p class="fs-3"> <span class="text-danger">Sorry!</span> the job you are searching for was not found.</p>
+                        <p class="lead">
+                            It doesn’t exist.
+                          </p>
+                        <a href="index.html" class="btn btn-primary">Go Home</a>
+                    </div>
+                </div>
+                    {% endif %}
 
 
     {% endblock %}
+    
+    
+          

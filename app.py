@@ -21,9 +21,12 @@ from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import SnowballStemmer
 stemmer = SnowballStemmer("english")
 from csv import writer
-
-
 from flask_paginate import Pagination, get_page_args
+
+
+
+app = Flask(__name__)
+
 @app.route("/", methods=["POST", "GET"])
 def index():
     if request.method == "POST":

@@ -28,7 +28,6 @@ app = Flask(__name__)
 def index():
     if request.method == "POST":
 	    requete = request.form["nm"]
-     
 	    return redirect(url_for("home", requete=requete))
     else:
         return render_template("index.html")
@@ -91,19 +90,6 @@ def home(requete):
     query_vec = vectorizer.transform([res]) 
     results = cosine_similarity(X,query_vec).reshape((-1,)) 
     sizeOfsimilarities = results[ (results >= 0.5) & (results <=1) ].size
-    print("size :::",sizeOfsimilarities)
-    # for i in arr:
-    #     print(i)
-    # for i in results:
-        # if i>0.7:
-        # print("similarity value",i,type(results))
-    # results = results(results!=0)
-    # results = np.argwhere(results>0.5)
-    # results = results>0.()
-    # for i in results:
-    #     print(i,"\t\t",type(results))
-    # n_zeros = np.count_nonzero(results>=0.5)
-    # nbOfResults = results.size
     myData=results.argsort()[sizeOfsimilarities:][::-1]
     page,per_page,offset = get_page_args(page_parameter="page",per_page_parameter="per_page")
     total = sizeOfsimilarities

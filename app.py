@@ -68,23 +68,21 @@ def get_myData(myData,offset=0,per_page=20):
 def home(requete):
     #req1 here is used to send it through url in order to save later in a csv file
     req1 = requete
-    
     df  = Read_csv("jobs_data.csv")
     # df = CleanData(df)
-    df = drop_duplicates(df)
-    columns_list = ['title','jobFunction','industry']
+    df= drop_duplicates(df)
+    df['clean_title'] = to_Lower(df['title'])
+
+    columns_list = ['jobFunction','industry']
     df = RemovePunctuation(df,columns_list)
-    df['clean_title'] = df['title']
-    df['clean_title'] = to_Lower(df['clean_title'])
-
-    df['clean_title']= remove_StopWrods(df['clean_title'])
-    df['tokenized_title']=df['title'].apply(lambda x: tokenize(x))
-
+    df['tokenized_word'] = df['clean_title'].apply(lambda x: tokenize_words(x))
+    df['removed_stopwords']= df['tokenized_word'].apply(lambda x: ' '.join([word for word in x if word not in (stop)]))
+    df['steem_title'] = df['removed_stopwords'].apply(lambda x: steem_word(x))
+    df['steem_title']= df['steem_title'].apply(lambda x: ' '.join([word for word in x]))
+    
     vectorizer = TfidfVectorizer(decode_error='ignore', lowercase = True, min_df=2)
-    X = vectorizer.fit_transform(df['clean_title'])
-    df['lem_title']=df['tokenized_title'].apply(lambda x: [stemmer.stem(y) for y in x])
+    X = vectorizer.fit_transform(df['steem_title'])
 
-    query = requete.replace("  "," ")
     query = word_tokenize(requete)
     query = [word for word in query if not word in stopwords.words()]
     req=[]
@@ -92,28 +90,33 @@ def home(requete):
     for word in query:
         res +=' '+stemmer.stem(word)
     start_time = time.time()
+    print("resresresresresresresresresresresres ::::::",res)
     query_vec = vectorizer.transform([res]) 
     results = cosine_similarity(X,query_vec).reshape((-1,)) 
+    sizeOfsimilarities = results[ (results >= 0.5) & (results <=1) ].size
+    print("size :::",sizeOfsimilarities)
+    # for i in arr:
+    #     print(i)
+    # for i in results:
+        # if i>0.7:
+        # print("similarity value",i,type(results))
+    # results = results(results!=0)
     # results = np.argwhere(results>0.5)
     # results = results>0.()
     # for i in results:
     #     print(i,"\t\t",type(results))
-    n_zeros = np.count_nonzero(results==0)
-    nbOfResults = (results.size-n_zeros)
-    myData=results.argsort()[nbOfResults+1:][::-1]
-    
-    # for i in myData:
-    #     print(i)
+    # n_zeros = np.count_nonzero(results>=0.5)
+    # nbOfResults = results.size
+    myData=results.argsort()[sizeOfsimilarities:][::-1]
     page,per_page,offset = get_page_args(page_parameter="page",per_page_parameter="per_page")
-    total = len(myData)
-    
+    total = sizeOfsimilarities
     pagination_myData = get_myData(myData,offset=offset,per_page=per_page)
     
     pagination = Pagination(page=page,per_page=per_page,total=total,css_framework="bootstrap4")
     
     return render_template("result.html",myData=pagination_myData,
                            page = page,per_page=per_page,
-                           pagination=pagination,df=df,res=req1,time=time.time()-start_time,nbOfResults=nbOfResults)
+                           pagination=pagination,df=df,res=req1,time=time.time()-start_time,nbOfResults=sizeOfsimilarities)
 
 if __name__ == "__main__":
     app.run(debug=False)

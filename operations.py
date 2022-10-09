@@ -1,7 +1,6 @@
 import pandas as pd
 import string
 import nltk
-nltk.download()
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')

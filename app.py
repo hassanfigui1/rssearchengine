@@ -24,6 +24,17 @@ from csv import writer
 from flask_paginate import Pagination, get_page_args
 app = Flask(__name__)
 
+def get_myData(myData,offset=0,per_page=20):
+    return myData[offset:offset + per_page]
+def to_Lower(df):
+    df = [entry.lower() for entry in df]
+    return df 
+def tokenize_words(text):
+    tokens = word_tokenize(text)
+    return tokens
+def steem_word(df):
+    return [porter.stem(w) for w in tokenize_words(df)]
+
 @app.route("/", methods=["POST", "GET"])
 def index():
     if request.method == "POST":
@@ -59,11 +70,9 @@ def details(title,jobF,industry,df,id,requete):
     else:
         print("hassanfig")
         return render_template("details.html",title=title,jobF=jobF,industry=industry,df=df,id=id,requete=requete)
-def get_myData(myData,offset=0,per_page=20):
-    return myData[offset:offset + per_page]
-
 @app.route("/<requete>")
 def home(requete):
+    start_time = time.time()
     #req1 here is used to send it through url in order to save later in a csv file
     req1 = requete
     df  = Read_csv("jobs_data.csv")
@@ -86,11 +95,13 @@ def home(requete):
     res =""
     for word in query:
         res +=' '+stemmer.stem(word)
-    start_time = time.time()
     query_vec = vectorizer.transform([res]) 
     results = cosine_similarity(X,query_vec).reshape((-1,)) 
+    
+    
     sizeOfsimilarities = results[ (results >= 0.5) & (results <=1) ].size
     myData=results.argsort()[sizeOfsimilarities:][::-1]
+    
     page,per_page,offset = get_page_args(page_parameter="page",per_page_parameter="per_page")
     total = sizeOfsimilarities
     pagination_myData = get_myData(myData,offset=offset,per_page=per_page)

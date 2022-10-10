@@ -17,15 +17,14 @@ from nltk.corpus import stopwords
 stop = stopwords.words('english')
 from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import SnowballStemmer
-stemmer = SnowballStemmer("english")
 from csv import writer
 from nltk.tokenize import word_tokenize
 
-
+porter = SnowballStemmer("english")
+from nltk.tokenize import word_tokenize
 
 from flask_paginate import Pagination, get_page_args
 app = Flask(__name__)
-
 def get_myData(myData,offset=0,per_page=20):
     return myData[offset:offset + per_page]
 def to_Lower(df):
@@ -80,7 +79,7 @@ def home(requete):
     df  = Read_csv("jobs_data.csv")
     # df = CleanData(df)
     df= drop_duplicates(df)
-    df['clean_title'] = to_Lower(df['title'])
+    df['clean_title'] = [entry.lower() for entry in df['title']]
     columns_list = ['title','jobFunction','industry']
     df = RemovePunctuation(df,columns_list)
     df['tokenized_word'] = df['clean_title'].apply(lambda x: tokenize_words(x))
@@ -96,7 +95,7 @@ def home(requete):
     req=[]
     res =""
     for word in query:
-        res +=' '+stemmer.stem(word)
+        res +=' '+porter.stem(word)
     query_vec = vectorizer.transform([res]) 
     results = cosine_similarity(X,query_vec).reshape((-1,)) 
     

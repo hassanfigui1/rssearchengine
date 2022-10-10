@@ -19,6 +19,8 @@ from nltk.tokenize import word_tokenize
 from nltk.stem.snowball import SnowballStemmer
 stemmer = SnowballStemmer("english")
 from csv import writer
+from nltk.tokenize import word_tokenize
+
 
 
 from flask_paginate import Pagination, get_page_args
